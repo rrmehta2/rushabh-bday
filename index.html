@@ -956,13 +956,18 @@ function renderQuestion() {
   const container = document.getElementById('optionsContainer');
   container.innerHTML = '';
 
+  container.style.pointerEvents = 'none';
+
   q.opts.forEach((opt, i) => {
     const btn = document.createElement('button');
     btn.className = 'option-btn';
     btn.innerHTML = `<span class="opt-letter">${LETTERS[i]}</span> ${opt}`;
+    btn.addEventListener('touchend', (e) => { e.preventDefault(); handleAnswer(i, btn); }, { passive: false });
     btn.addEventListener('click', () => handleAnswer(i, btn));
     container.appendChild(btn);
   });
+
+  setTimeout(() => { container.style.pointerEvents = ''; }, 350);
 
   clearFeedback();
 }
