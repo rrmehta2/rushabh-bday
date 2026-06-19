@@ -213,6 +213,7 @@
     }
 
     .option-btn:disabled { cursor: default; }
+    .option-btn { -webkit-tap-highlight-color: transparent; }
 
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
@@ -944,6 +945,7 @@ function renderQuestion() {
   const q = QUESTIONS[current];
   firstTried = true;
   answered   = false;
+  if (document.activeElement) document.activeElement.blur();
 
   document.getElementById('progressLabel').textContent = `Question ${current + 1} of 10`;
   document.getElementById('scoreLabel').textContent    = `✓ ${score} correct`;
