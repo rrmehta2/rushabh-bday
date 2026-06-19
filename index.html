@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday Rushabh! 🎉</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ff6b9d, #ffd93d, #6bcb77, #4d96ff, #ff6b9d);
+      background-size: 400% 400%;
+      animation: gradientShift 8s ease infinite;
+      font-family: 'Nunito', sans-serif;
+      overflow-x: hidden;
+    }
+
+    @keyframes gradientShift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    canvas#confetti {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      background: rgba(255,255,255,0.93);
+      border-radius: 32px;
+      padding: 44px 32px 36px;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.15);
+      margin-bottom: 28px;
+    }
+
+    .emoji-row {
+      font-size: 2.6rem;
+      letter-spacing: 8px;
+      margin-bottom: 14px;
+      animation: bounce 1.5s infinite alternate;
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-10px); }
+    }
+
+    .hero h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2.4rem, 8vw, 4.2rem);
+      color: #ff4d8b;
+      text-shadow: 3px 3px 0 #ffd93d;
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .hero .subtitle {
+      font-size: 1.1rem;
+      color: #666;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    /* ── Quiz Card ── */
+    .quiz-card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 28px;
+      padding: 36px 32px;
+      box-shadow: 0 6px 40px rgba(0,0,0,0.13);
+    }
+
+    /* Progress */
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .progress-label {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .score-label {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #6bcb77;
+    }
+
+    .progress-bar-wrap {
+      background: #f0f0f0;
+      border-radius: 99px;
+      height: 10px;
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #ff6b9d, #ffd93d);
+      transition: width 0.4s ease;
+    }
+
+    /* Question */
+    .question-num {
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.95rem;
+      color: #bbb;
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+    }
+
+    .question-text {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.2rem, 3.5vw, 1.55rem);
+      color: #222;
+      line-height: 1.4;
+      margin-bottom: 28px;
+    }
+
+    /* Options */
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-btn {
+      background: #f8f8ff;
+      border: 2.5px solid #e8e8f0;
+      border-radius: 16px;
+      padding: 16px 20px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #333;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: #4d96ff;
+      background: #eef4ff;
+      transform: translateX(4px);
+    }
+
+    .option-btn .opt-letter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #e8e8f0;
+      font-size: 0.85rem;
+      font-weight: 800;
+      flex-shrink: 0;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .option-btn:hover:not(:disabled) .opt-letter {
+      background: #4d96ff;
+      color: white;
+    }
+
+    /* States */
+    .option-btn.correct {
+      border-color: #6bcb77;
+      background: #efffef;
+      animation: correctPop 0.3s ease;
+    }
+
+    .option-btn.correct .opt-letter {
+      background: #6bcb77;
+      color: white;
+    }
+
+    .option-btn.wrong {
+      border-color: #ff4d4d;
+      background: #fff0f0;
+      animation: shake 0.4s ease;
+    }
+
+    .option-btn.wrong .opt-letter {
+      background: #ff4d4d;
+      color: white;
+    }
+
+    .option-btn:disabled { cursor: default; }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%  { transform: translateX(-8px); }
+      40%  { transform: translateX(8px); }
+      60%  { transform: translateX(-5px); }
+      80%  { transform: translateX(5px); }
+    }
+
+    @keyframes correctPop {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+
+    /* Feedback toast */
+    .feedback {
+      margin-top: 18px;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.2s;
+      min-height: 48px;
+    }
+
+    .feedback.show { opacity: 1; }
+    .feedback.correct-fb { background: #efffef; color: #3aaa4a; }
+    .feedback.wrong-fb   { background: #fff0f0; color: #cc2222; }
+
+    /* ── Result Screen ── */
+    .result-screen {
+      display: none;
+      text-align: center;
+    }
+
+    .result-screen.show { display: block; }
+
+    .bollywood-age {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(5rem, 18vw, 9rem);
+      line-height: 1;
+      background: linear-gradient(135deg, #ff4d8b, #ffd93d);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 16px 0;
+      animation: agePop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+
+    @keyframes agePop {
+      from { transform: scale(0.3); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    .result-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.5rem;
+      color: #555;
+      margin-bottom: 4px;
+    }
+
+    .result-subtitle {
+      font-size: 0.95rem;
+      color: #888;
+      margin-bottom: 24px;
+    }
+
+    .result-verdict {
+      font-size: 1.1rem;
+      color: #333;
+      font-weight: 700;
+      line-height: 1.7;
+      background: #f8f8ff;
+      border-radius: 18px;
+      padding: 22px 24px;
+      margin-bottom: 28px;
+    }
+
+    .score-breakdown {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .score-box {
+      text-align: center;
+    }
+
+    .score-box .big {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2.4rem;
+      display: block;
+    }
+
+    .score-box .small {
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #999;
+      letter-spacing: 0.5px;
+    }
+
+    .score-box.correct-box .big { color: #6bcb77; }
+    .score-box.wrong-box .big   { color: #ff6b6b; }
+
+    .play-again-btn {
+      background: linear-gradient(135deg, #ff6b9d, #ffd93d);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 16px 44px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(255,107,157,0.4);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .play-again-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 32px rgba(255,107,157,0.5);
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="emoji-row">🎂🎉🥳🎈🎁</div>
+    <h1>Happy Birthday,<br>Rushabh!</h1>
+    <p class="subtitle">You're 34. But how old are you in <em>Bollywood years?</em><br>Take the quiz to find out. 👇</p>
+  </div>
+
+  <!-- Quiz Card -->
+  <div class="quiz-card" id="quizCard">
+
+    <!-- Quiz body -->
+    <div id="quizBody">
+      <div class="progress-header">
+        <span class="progress-label" id="progressLabel">Question 1 of 10</span>
+        <span class="score-label" id="scoreLabel">✓ 0 correct</span>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+      </div>
+
+      <div class="question-num" id="questionNum">Q1</div>
+      <div class="question-text" id="questionText"></div>
+
+      <div class="options" id="optionsContainer"></div>
+
+      <div class="feedback" id="feedback"></div>
+    </div>
+
+    <!-- Result Screen -->
+    <div class="result-screen" id="resultScreen">
+      <p class="result-title">Your Bollywood Age is...</p>
+      <div class="bollywood-age" id="bollywoodAge"></div>
+      <p class="result-subtitle" id="resultSubtitle"></p>
+
+      <div class="score-breakdown">
+        <div class="score-box correct-box">
+          <span class="big" id="finalCorrect"></span>
+          <span class="small">Correct</span>
+        </div>
+        <div class="score-box wrong-box">
+          <span class="big" id="finalWrong"></span>
+          <span class="small">Missed</span>
+        </div>
+      </div>
+
+      <div class="result-verdict" id="resultVerdict"></div>
+
+      <button class="play-again-btn" onclick="resetQuiz()">🔄 Try Again</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── Question Bank (100 questions, 10 randomly picked per attempt) ──
+const ALL_QUESTIONS = [
+  {
+    q: "Hrithik Roshan made his Bollywood debut with which film?",
+    opts: ["Mission Kashmir", "Kaho Naa... Pyaar Hai", "Fiza", "Mohabbatein"],
+    ans: 1
+  },
+  {
+    q: "Who played the iconic character 'Poo' in Kabhi Khushi Kabhie Gham (2001)?",
+    opts: ["Kajol", "Rani Mukerji", "Kareena Kapoor", "Preity Zinta"],
+    ans: 2
+  },
+  {
+    q: "In Lagaan (2001), which British officer challenges the villagers to a cricket match?",
+    opts: ["Captain Andrews", "Captain Russell", "Captain Whitfield", "Captain Bradshaw"],
+    ans: 1
+  },
+  {
+    q: "What was Rancho's real name in 3 Idiots (2009)?",
+    opts: ["Ranchoddas Chanchad", "Wangdu Shamaldas", "Phunsukh Wangdu", "Farhan Qureshi"],
+    ans: 2
+  },
+  {
+    q: "Who directed Gangs of Wasseypur (2012)?",
+    opts: ["Vishal Bhardwaj", "Dibakar Banerjee", "Tigmanshu Dhulia", "Anurag Kashyap"],
+    ans: 3
+  },
+  {
+    q: "Kangana Ranaut won the National Film Award for Best Actress for which film?",
+    opts: ["Tanu Weds Manu", "Fashion", "Queen", "Manikarnika"],
+    ans: 2
+  },
+  {
+    q: "The song 'Tum Hi Ho' is from which film?",
+    opts: ["Raaz 3", "Aashiqui 2", "Jannat 2", "Murder 3"],
+    ans: 1
+  },
+  {
+    q: "Which actor played Sanjay Dutt in the 2018 biopic Sanju?",
+    opts: ["Ranveer Singh", "Varun Dhawan", "Arjun Kapoor", "Ranbir Kapoor"],
+    ans: 3
+  },
+  {
+    q: "Who played the terrifyingly unbothered villain in Animal (2023)?",
+    opts: ["Anil Kapoor", "Jackie Shroff", "Bobby Deol", "Suresh Oberoi"],
+    ans: 2
+  },
+  {
+    q: "Shah Rukh Khan's comeback film in January 2023 after a 4-year hiatus was?",
+    opts: ["Dunki", "Jawan", "Don 3", "Pathaan"],
+    ans: 3
+  },
+  // ── 90 additional questions ───────────────────────────────────────
+  {
+    q: "Who directed 'Dil Chahta Hai' (2001)?",
+    opts: ["Zoya Akhtar", "Farhan Akhtar", "Imtiaz Ali", "Rajkumar Hirani"],
+    ans: 1
+  },
+  {
+    q: "In 'Devdas' (2002), which actress played Chandramukhi?",
+    opts: ["Aishwarya Rai", "Preity Zinta", "Madhuri Dixit", "Rani Mukerji"],
+    ans: 2
+  },
+  {
+    q: "Who played 'Circuit' in 'Munnabhai MBBS' (2003)?",
+    opts: ["Boman Irani", "Arshad Warsi", "Jimmy Shergill", "Vivek Oberoi"],
+    ans: 1
+  },
+  {
+    q: "'Main Hoon Na' (2004) was directed by?",
+    opts: ["Karan Johar", "David Dhawan", "Farah Khan", "Sajid Khan"],
+    ans: 2
+  },
+  {
+    q: "Which actress made her Bollywood debut in 'Om Shanti Om' (2007)?",
+    opts: ["Sonam Kapoor", "Anushka Sharma", "Deepika Padukone", "Katrina Kaif"],
+    ans: 2
+  },
+  {
+    q: "'Jab We Met' (2007) was directed by?",
+    opts: ["Anurag Basu", "Imtiaz Ali", "Vishal Bhardwaj", "Zoya Akhtar"],
+    ans: 1
+  },
+  {
+    q: "Who directed 'Taare Zameen Par' (2007)?",
+    opts: ["Rajkumar Hirani", "Aamir Khan", "Nitesh Tiwari", "Ashutosh Gowariker"],
+    ans: 1
+  },
+  {
+    q: "In 'Ghajini' (2008), how long can Sanjay Singhania retain new memories?",
+    opts: ["15 minutes", "30 minutes", "1 hour", "10 minutes"],
+    ans: 0
+  },
+  {
+    q: "Which 2009 Anurag Kashyap film was a modern retelling of Devdas?",
+    opts: ["No Smoking", "Black Friday", "Dev D", "Gulaal"],
+    ans: 2
+  },
+  {
+    q: "Who played the lead in 'Rang De Basanti' (2006)?",
+    opts: ["Hrithik Roshan", "Aamir Khan", "Saif Ali Khan", "Shahid Kapoor"],
+    ans: 1
+  },
+  {
+    q: "'Black' (2005) starred which actress as a deaf-blind student?",
+    opts: ["Vidya Balan", "Tabu", "Rani Mukerji", "Kajol"],
+    ans: 2
+  },
+  {
+    q: "Who played Chulbul Pandey in 'Dabangg' (2010)?",
+    opts: ["Ajay Devgn", "Akshay Kumar", "Salman Khan", "John Abraham"],
+    ans: 2
+  },
+  {
+    q: "'Kahaani' (2012) starred which actress as a pregnant investigator?",
+    opts: ["Rani Mukerji", "Konkona Sen Sharma", "Tabu", "Vidya Balan"],
+    ans: 3
+  },
+  {
+    q: "Which sport is at the center of 'Dangal' (2016)?",
+    opts: ["Boxing", "Wrestling", "Kabaddi", "Weightlifting"],
+    ans: 1
+  },
+  {
+    q: "Who directed 'Bajrangi Bhaijaan' (2015)?",
+    opts: ["Ali Abbas Zafar", "Kabir Khan", "Sajid Nadiadwala", "David Dhawan"],
+    ans: 1
+  },
+  {
+    q: "Who played Alauddin Khilji in 'Padmaavat' (2018)?",
+    opts: ["Shahid Kapoor", "Ranbir Kapoor", "Ranveer Singh", "Arjun Kapoor"],
+    ans: 2
+  },
+  {
+    q: "'Gully Boy' (2019) was directed by?",
+    opts: ["Farhan Akhtar", "Anurag Kashyap", "Zoya Akhtar", "Reema Kagti"],
+    ans: 2
+  },
+  {
+    q: "Who played Major Vihaan Shergill in 'URI: The Surgical Strike' (2019)?",
+    opts: ["Sidharth Malhotra", "Tiger Shroff", "Vicky Kaushal", "John Abraham"],
+    ans: 2
+  },
+  {
+    q: "How does PK initially learn to communicate with humans in 'PK' (2014)?",
+    opts: ["Watching TV", "Stealing a radio", "Touching someone's hand", "Reading books"],
+    ans: 2
+  },
+  {
+    q: "Who played Bajirao in 'Bajirao Mastani' (2015)?",
+    opts: ["Hrithik Roshan", "Ranveer Singh", "Ranbir Kapoor", "Shahid Kapoor"],
+    ans: 1
+  },
+  {
+    q: "'Barfi!' (2012) starred which actor as a deaf-mute man?",
+    opts: ["Shahid Kapoor", "Ranveer Singh", "Ranbir Kapoor", "Arjun Kapoor"],
+    ans: 2
+  },
+  {
+    q: "'Dil Dhadakne Do' (2015) was directed by?",
+    opts: ["Farhan Akhtar", "Reema Kagti", "Zoya Akhtar", "Ritesh Batra"],
+    ans: 2
+  },
+  {
+    q: "Who played Tanhaji Malusare in 'Tanhaji: The Unsung Warrior' (2020)?",
+    opts: ["Akshay Kumar", "Ajay Devgn", "Shahid Kapoor", "Prabhas"],
+    ans: 1
+  },
+  {
+    q: "Who directed 'URI: The Surgical Strike' (2019)?",
+    opts: ["Aditya Dhar", "Neeraj Pandey", "Kabir Khan", "Shoojit Sircar"],
+    ans: 0
+  },
+  {
+    q: "Who played Naina in 'Yeh Jawaani Hai Deewani' (2013)?",
+    opts: ["Alia Bhatt", "Parineeti Chopra", "Deepika Padukone", "Anushka Sharma"],
+    ans: 2
+  },
+  {
+    q: "'Andhadhun' (2018) was directed by?",
+    opts: ["Vishal Bhardwaj", "Sriram Raghavan", "Hansal Mehta", "Anurag Basu"],
+    ans: 1
+  },
+  {
+    q: "Who played the male lead in 'Stree' (2018)?",
+    opts: ["Ayushmann Khurrana", "Vicky Kaushal", "Rajkummar Rao", "Kartik Aaryan"],
+    ans: 2
+  },
+  {
+    q: "Which actor played the lead in 'Article 15' (2019)?",
+    opts: ["Rajkummar Rao", "Vicky Kaushal", "Ayushmann Khurrana", "Irrfan Khan"],
+    ans: 2
+  },
+  {
+    q: "Who played Milkha Singh in 'Bhaag Milkha Bhaag' (2013)?",
+    opts: ["Hrithik Roshan", "John Abraham", "Farhan Akhtar", "Arjun Kapoor"],
+    ans: 2
+  },
+  {
+    q: "'Queen' (2014) was directed by?",
+    opts: ["Imtiaz Ali", "Vikas Bahl", "Anurag Kashyap", "Dibakar Banerjee"],
+    ans: 1
+  },
+  {
+    q: "Which film marked Alia Bhatt's acting debut?",
+    opts: ["Highway", "Student of the Year", "2 States", "Humpty Sharma Ki Dulhania"],
+    ans: 1
+  },
+  {
+    q: "'Lagaan' (2001) was directed by?",
+    opts: ["Ashutosh Gowariker", "Mani Ratnam", "Rajkumar Hirani", "Sanjay Leela Bhansali"],
+    ans: 0
+  },
+  {
+    q: "Who played the lead in 'Koi Mil Gaya' (2003)?",
+    opts: ["Shah Rukh Khan", "Aamir Khan", "Hrithik Roshan", "Ranbir Kapoor"],
+    ans: 2
+  },
+  {
+    q: "Who played Rani Padmavati in 'Padmaavat' (2018)?",
+    opts: ["Aishwarya Rai", "Priyanka Chopra", "Anushka Sharma", "Deepika Padukone"],
+    ans: 3
+  },
+  {
+    q: "'Lage Raho Munna Bhai' (2006) is a sequel to which film?",
+    opts: ["Company", "Munnabhai MBBS", "Parinda", "Satya"],
+    ans: 1
+  },
+  {
+    q: "In 'Fan' (2016), how many roles does Shah Rukh Khan play?",
+    opts: ["One", "Two", "Three", "Four"],
+    ans: 1
+  },
+  {
+    q: "Who starred in 'Raazi' (2018) as an Indian spy in Pakistan?",
+    opts: ["Vidya Balan", "Alia Bhatt", "Deepika Padukone", "Priyanka Chopra"],
+    ans: 1
+  },
+  {
+    q: "'Kabir Singh' (2019) was directed by?",
+    opts: ["Sandeep Reddy Vanga", "Imtiaz Ali", "Mohit Suri", "Vikram Bhatt"],
+    ans: 0
+  },
+  {
+    q: "'Super 30' (2019) was based on the real life of which educator?",
+    opts: ["Srinivasa Ramanujan", "Shakuntala Devi", "Anand Kumar", "P.C. Mahalanobis"],
+    ans: 2
+  },
+  {
+    q: "'Piku' (2015) was directed by?",
+    opts: ["Shoojit Sircar", "Imtiaz Ali", "Kabir Khan", "Rakeysh Omprakash Mehra"],
+    ans: 0
+  },
+  {
+    q: "Who played the lead in 'Mardaani' (2014)?",
+    opts: ["Vidya Balan", "Priyanka Chopra", "Rani Mukerji", "Tabu"],
+    ans: 2
+  },
+  {
+    q: "In which year was '3 Idiots' released?",
+    opts: ["2007", "2008", "2009", "2010"],
+    ans: 2
+  },
+  {
+    q: "Who were the three main leads of 'Zindagi Na Milegi Dobara' (2011)?",
+    opts: ["SRK, Salman & Aamir", "Hrithik, Farhan & Abhay Deol", "Ranbir, Ranveer & Arjun", "Shahid, Ranbir & Ranveer"],
+    ans: 1
+  },
+  {
+    q: "'Rockstar' (2011) was directed by?",
+    opts: ["Anurag Kashyap", "Imtiaz Ali", "Vikramaditya Motwane", "Zoya Akhtar"],
+    ans: 1
+  },
+  {
+    q: "Who played the main antagonist in 'Dhoom' (2004)?",
+    opts: ["Sanjay Dutt", "John Abraham", "Ajay Devgn", "Bobby Deol"],
+    ans: 1
+  },
+  {
+    q: "Who starred in 'The Dirty Picture' (2011)?",
+    opts: ["Priyanka Chopra", "Vidya Balan", "Rani Mukerji", "Kangana Ranaut"],
+    ans: 1
+  },
+  {
+    q: "'Drishyam' (2015) starred which actor?",
+    opts: ["Ajay Devgn", "Akshay Kumar", "Salman Khan", "Shah Rukh Khan"],
+    ans: 0
+  },
+  {
+    q: "'Kabhi Alvida Naa Kehna' (2006) was directed by?",
+    opts: ["Aditya Chopra", "Karan Johar", "Yash Chopra", "Farah Khan"],
+    ans: 1
+  },
+  {
+    q: "What was Alia Bhatt's character name in 'Highway' (2014)?",
+    opts: ["Noor", "Veera", "Geet", "Jannat"],
+    ans: 1
+  },
+  {
+    q: "Who played the lead in 'Kaabil' (2017) as a visually impaired man?",
+    opts: ["Shahid Kapoor", "Ranbir Kapoor", "Hrithik Roshan", "Tiger Shroff"],
+    ans: 2
+  },
+  {
+    q: "Who played flight attendant Neerja Bhanot in the 2016 biopic?",
+    opts: ["Priyanka Chopra", "Deepika Padukone", "Anushka Sharma", "Sonam Kapoor"],
+    ans: 3
+  },
+  {
+    q: "Which Shakespeare play is 'Haider' (2014) based on?",
+    opts: ["Macbeth", "Othello", "Hamlet", "King Lear"],
+    ans: 2
+  },
+  {
+    q: "What learning disability does Ishaan have in 'Taare Zameen Par' (2007)?",
+    opts: ["ADHD", "Autism", "Dyslexia", "Dyscalculia"],
+    ans: 2
+  },
+  {
+    q: "Which actor played the lead in 'Paan Singh Tomar' (2012)?",
+    opts: ["Manoj Bajpayee", "Irrfan Khan", "Nawazuddin Siddiqui", "Rajkummar Rao"],
+    ans: 1
+  },
+  {
+    q: "Who played Udham Singh in 'Sardar Udham' (2021)?",
+    opts: ["Randeep Hooda", "Vicky Kaushal", "Shahid Kapoor", "Rajkummar Rao"],
+    ans: 1
+  },
+  {
+    q: "'Rang De Basanti' (2006) was directed by?",
+    opts: ["Anurag Kashyap", "Vishal Bhardwaj", "Rakeysh Omprakash Mehra", "Kabir Khan"],
+    ans: 2
+  },
+  {
+    q: "'Ae Dil Hai Mushkil' (2016) was directed by?",
+    opts: ["Imtiaz Ali", "Karan Johar", "Mohit Suri", "Farah Khan"],
+    ans: 1
+  },
+  {
+    q: "Who played the main villain in 'Agneepath' (2012)?",
+    opts: ["Sanjay Dutt", "Danny Denzongpa", "Nana Patekar", "Rishi Kapoor"],
+    ans: 0
+  },
+  {
+    q: "Who starred opposite Ayushmann Khurrana in 'Andhadhun' (2018)?",
+    opts: ["Tabu", "Vidya Balan", "Rani Mukerji", "Kangana Ranaut"],
+    ans: 0
+  },
+  {
+    q: "In 'Ek Tha Tiger' (2012), what is Tiger's profession?",
+    opts: ["A cop", "A RAW agent", "An army officer", "A spy for ISI"],
+    ans: 1
+  },
+  {
+    q: "Who played MS Dhoni in 'MS Dhoni: The Untold Story' (2016)?",
+    opts: ["Arjun Kapoor", "Sushant Singh Rajput", "Ranveer Singh", "Shahid Kapoor"],
+    ans: 1
+  },
+  {
+    q: "Which actor deals with premature baldness in 'Bala' (2019)?",
+    opts: ["Rajkummar Rao", "Vicky Kaushal", "Ayushmann Khurrana", "Kartik Aaryan"],
+    ans: 2
+  },
+  {
+    q: "'Tamasha' (2015) was directed by?",
+    opts: ["Anurag Kashyap", "Imtiaz Ali", "Mohit Suri", "Vikram Bhatt"],
+    ans: 1
+  },
+  {
+    q: "In 'Dil Chahta Hai' (2001), which city do the friends go to on a road trip?",
+    opts: ["Mumbai", "Delhi", "Goa", "Jaipur"],
+    ans: 2
+  },
+  {
+    q: "Who played Mary Kom in the 2014 biopic?",
+    opts: ["Deepika Padukone", "Alia Bhatt", "Priyanka Chopra", "Anushka Sharma"],
+    ans: 2
+  },
+  {
+    q: "'Brahmastra: Part One' (2022) was directed by?",
+    opts: ["Karan Johar", "Ayan Mukerji", "Siddharth Anand", "Kabir Khan"],
+    ans: 1
+  },
+  {
+    q: "Ranveer Singh played which legendary cricketer in '83' (2021)?",
+    opts: ["Sunil Gavaskar", "Mohinder Amarnath", "Kapil Dev", "Ravi Shastri"],
+    ans: 2
+  },
+  {
+    q: "Who played the title role in 'Gangubai Kathiawadi' (2022)?",
+    opts: ["Deepika Padukone", "Priyanka Chopra", "Alia Bhatt", "Tabu"],
+    ans: 2
+  },
+  {
+    q: "'Gangubai Kathiawadi' (2022) was directed by?",
+    opts: ["Karan Johar", "Imtiaz Ali", "Sanjay Leela Bhansali", "Vishal Bhardwaj"],
+    ans: 2
+  },
+  {
+    q: "'Chhichhore' (2019) was directed by?",
+    opts: ["Rajkumar Hirani", "Nitesh Tiwari", "Aanand L Rai", "Vikas Bahl"],
+    ans: 1
+  },
+  {
+    q: "Who played the lead in the 2018 film 'Manto'?",
+    opts: ["Nawazuddin Siddiqui", "Irrfan Khan", "Manoj Bajpayee", "Rajkummar Rao"],
+    ans: 0
+  },
+  {
+    q: "'Dil Bechara' (2020) was the final film of which actor?",
+    opts: ["Irrfan Khan", "Rishi Kapoor", "Sushant Singh Rajput", "Saroj Khan"],
+    ans: 2
+  },
+  {
+    q: "'Tiger Zinda Hai' (2017) is a sequel to which film?",
+    opts: ["Wanted", "Kick", "Ek Tha Tiger", "Dabangg"],
+    ans: 2
+  },
+  {
+    q: "Who played the female lead in 'Jawan' (2023)?",
+    opts: ["Deepika Padukone", "Nayanthara", "Katrina Kaif", "Priyanka Chopra"],
+    ans: 1
+  },
+  {
+    q: "Which film features the song 'Channa Mereya'?",
+    opts: ["Tamasha", "Ae Dil Hai Mushkil", "Jab Harry Met Sejal", "Dear Zindagi"],
+    ans: 1
+  },
+  {
+    q: "'Talvar' (2015) was directed by?",
+    opts: ["Meghna Gulzar", "Shoojit Sircar", "Vikramaditya Motwane", "Reema Kagti"],
+    ans: 0
+  },
+  {
+    q: "Which actress played Sweety in 'Dum Laga Ke Haisha' (2015)?",
+    opts: ["Parineeti Chopra", "Bhumi Pednekar", "Sonakshi Sinha", "Shraddha Kapoor"],
+    ans: 1
+  },
+  {
+    q: "'Kapoor & Sons' (2016) was directed by?",
+    opts: ["Zoya Akhtar", "Shakun Batra", "Imtiaz Ali", "Karan Johar"],
+    ans: 1
+  },
+  {
+    q: "'Krrish' (2006) is a sequel to which film?",
+    opts: ["Koi Mil Gaya", "Luck By Chance", "Jodhaa Akbar", "Dhoom"],
+    ans: 0
+  },
+  {
+    q: "Who played the lead in 'Newton' (2017)?",
+    opts: ["Nawazuddin Siddiqui", "Rajkummar Rao", "Manoj Bajpayee", "Irrfan Khan"],
+    ans: 1
+  },
+  {
+    q: "'Ludo' (2020) was directed by?",
+    opts: ["Anurag Basu", "Zoya Akhtar", "Shoojit Sircar", "Karan Johar"],
+    ans: 0
+  },
+  {
+    q: "'Masaan' (2015) was directed by?",
+    opts: ["Anurag Kashyap", "Neeraj Ghaywan", "Vikramaditya Motwane", "Ritesh Batra"],
+    ans: 1
+  },
+  {
+    q: "In 'Lakshya' (2004), Hrithik Roshan's character fights in which conflict?",
+    opts: ["1971 Bangladesh War", "1965 India-Pakistan War", "Kargil War", "Sino-Indian War"],
+    ans: 2
+  },
+  {
+    q: "Who played the lead in 'Mimi' (2021)?",
+    opts: ["Alia Bhatt", "Sara Ali Khan", "Kriti Sanon", "Ananya Panday"],
+    ans: 2
+  },
+  {
+    q: "Who directed 'Dunki' (2023) starring Shah Rukh Khan?",
+    opts: ["Siddharth Anand", "Kabir Khan", "Rajkumar Hirani", "Atlee"],
+    ans: 2
+  },
+  {
+    q: "Who played the male lead in 'Gully Boy' (2019)?",
+    opts: ["Siddhant Chaturvedi", "Vijay Varma", "Ranveer Singh", "Nawazuddin Siddiqui"],
+    ans: 2
+  },
+  {
+    q: "In 'Ae Dil Hai Mushkil' (2016), who plays Alizeh, the female lead?",
+    opts: ["Anushka Sharma", "Deepika Padukone", "Aishwarya Rai", "Katrina Kaif"],
+    ans: 0
+  },
+  {
+    q: "Who directed 'Jawan' (2023)?",
+    opts: ["Siddharth Anand", "Atlee", "Rohit Shetty", "Kabir Khan"],
+    ans: 1
+  },
+  {
+    q: "'Lootera' (2013) was directed by?",
+    opts: ["Anurag Kashyap", "Imtiaz Ali", "Vikramaditya Motwane", "Dibakar Banerjee"],
+    ans: 2
+  },
+  {
+    q: "Who played the lead in 'Rock On!!' (2008)?",
+    opts: ["Hrithik Roshan", "Ranbir Kapoor", "Farhan Akhtar", "Saif Ali Khan"],
+    ans: 2
+  },
+  {
+    q: "Who played Vicky in 'Stree 2' (2024)?",
+    opts: ["Ayushmann Khurrana", "Vicky Kaushal", "Rajkummar Rao", "Kartik Aaryan"],
+    ans: 2
+  }
+];
+
+const VERDICTS = [
+  "Zero correct. ZERO. Bollywood age: 84. You are not a person, you are a Wikipedia stub. Are you even Indian?",
+  "One correct. ONE. Bollywood age 79. You are a Bollywood fossil. A relic. A cautionary tale told to children who skip film studies.",
+  "Two correct. Bollywood age 74. Bobby Deol sat silently through an entire film and still contributed more to Bollywood than this score.",
+  "Three out of ten. Bollywood age 69. Retirement age. Even your Bollywood knowledge has filed for a pension and moved to Pune.",
+  "Four correct. Bollywood age 64 — vintage, a collector's item, and completely unwatchable on a Friday night.",
+  "Five out of ten. Bollywood age 59. Halfway through the quiz and halfway to being irrelevant. This is what happens when you stop watching films.",
+  "Six correct. Bollywood age 54. At this point Salman Khan has more hit films than you have correct answers. And he tries very hard.",
+  "Seven out of ten. Bollywood age 49. One year from fifty, which is fitting, because you're about one rewatch away from knowing your stuff.",
+  "Eight correct. Bollywood age 44. Solid effort, but 44 is not 34. You are ten years too old in Bollywood terms. Karan Johar is mildly disappointed.",
+  "Nine out of ten! Bollywood age 39. So close to your actual age. One question aged you five years — hope it was worth it.",
+  "PERFECT SCORE. Bollywood age: 34. Exactly right. Exactly you. The quiz is balanced, you are balanced. Now go watch a film to celebrate."
+];
+
+// ── State ─────────────────────────────────────────────────────────
+let QUESTIONS  = [];
+let current    = 0;
+let score      = 0;
+let answered   = false;
+let firstTried = true;
+
+function pickQuestions() {
+  const shuffled = [...ALL_QUESTIONS].sort(() => Math.random() - 0.5);
+  QUESTIONS = shuffled.slice(0, 10);
+}
+
+// ── Render ────────────────────────────────────────────────────────
+const LETTERS = ['A', 'B', 'C', 'D'];
+
+function renderQuestion() {
+  const q = QUESTIONS[current];
+  firstTried = true;
+  answered   = false;
+
+  document.getElementById('progressLabel').textContent = `Question ${current + 1} of 10`;
+  document.getElementById('scoreLabel').textContent    = `✓ ${score} correct`;
+  document.getElementById('progressFill').style.width  = `${(current / 10) * 100}%`;
+  document.getElementById('questionNum').textContent   = `Q${current + 1}`;
+  document.getElementById('questionText').textContent  = q.q;
+
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="opt-letter">${LETTERS[i]}</span> ${opt}`;
+    btn.addEventListener('click', () => handleAnswer(i, btn));
+    container.appendChild(btn);
+  });
+
+  clearFeedback();
+}
+
+function handleAnswer(index, btn) {
+  if (answered) return;
+
+  const q       = QUESTIONS[current];
+  const correct = index === q.ans;
+  const allBtns = document.querySelectorAll('.option-btn');
+
+  if (correct) {
+    answered = true;
+    btn.classList.add('correct');
+    allBtns.forEach(b => b.disabled = true);
+
+    if (firstTried) {
+      score++;
+      document.getElementById('scoreLabel').textContent = `✓ ${score} correct`;
+      showFeedback('correct', '✅ Correct! Well done.');
+    } else {
+      showFeedback('correct', '✅ Correct! (Better late than never...)');
+    }
+
+    setTimeout(() => {
+      current++;
+      if (current < 10) {
+        renderQuestion();
+      } else {
+        showResult();
+      }
+    }, 1100);
+
+  } else {
+    firstTried = false;
+    btn.classList.add('wrong');
+    btn.disabled = true;
+    showFeedback('wrong', '❌ Nope. Try again.');
+    setTimeout(() => btn.classList.remove('wrong'), 500);
+  }
+}
+
+function showFeedback(type, msg) {
+  const el = document.getElementById('feedback');
+  el.className = `feedback show ${type === 'correct' ? 'correct-fb' : 'wrong-fb'}`;
+  el.textContent = msg;
+}
+
+function clearFeedback() {
+  const el = document.getElementById('feedback');
+  el.className = 'feedback';
+  el.textContent = '';
+}
+
+// ── Result ────────────────────────────────────────────────────────
+function showResult() {
+  document.getElementById('quizBody').style.display = 'none';
+  const result = document.getElementById('resultScreen');
+  result.classList.add('show');
+
+  const bollywoodAge = 84 - (5 * score);
+  const excess       = bollywoodAge - 34;
+
+  document.getElementById('bollywoodAge').textContent  = bollywoodAge;
+  document.getElementById('finalCorrect').textContent  = score;
+  document.getElementById('finalWrong').textContent    = 10 - score;
+  document.getElementById('resultVerdict').textContent = VERDICTS[score];
+
+  const subtitle = score === 10
+    ? `${score}/10 — Perfect score. Exactly 34. You've earned it.`
+    : `${score}/10 — ${excess} year${excess === 1 ? '' : 's'} older than your actual age of 34.`;
+  document.getElementById('resultSubtitle').textContent = subtitle;
+
+  launchConfetti();
+  document.getElementById('progressFill').style.width = '100%';
+}
+
+function resetQuiz() {
+  current  = 0;
+  score    = 0;
+  answered = false;
+
+  pickQuestions();
+  document.getElementById('quizBody').style.display = '';
+  document.getElementById('resultScreen').classList.remove('show');
+  renderQuestion();
+}
+
+// ── Confetti ──────────────────────────────────────────────────────
+const canvas = document.getElementById('confetti');
+const ctx    = canvas.getContext('2d');
+
+function resize() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const COLORS = ['#ff6b9d','#ffd93d','#6bcb77','#4d96ff','#ff6348','#a29bfe','#fd79a8','#fdcb6e'];
+
+class Piece {
+  constructor(fromTop) {
+    this.reset(fromTop);
+  }
+  reset(fromTop) {
+    this.x        = Math.random() * canvas.width;
+    this.y        = fromTop ? -20 : Math.random() * -canvas.height;
+    this.size     = Math.random() * 10 + 5;
+    this.color    = COLORS[Math.floor(Math.random() * COLORS.length)];
+    this.speedY   = Math.random() * 3 + 1.5;
+    this.speedX   = (Math.random() - 0.5) * 2;
+    this.rotation = Math.random() * Math.PI * 2;
+    this.rotSpeed = (Math.random() - 0.5) * 0.15;
+    this.opacity  = Math.random() * 0.5 + 0.5;
+    this.isRect   = Math.random() > 0.4;
+  }
+  update() {
+    this.y        += this.speedY;
+    this.x        += this.speedX;
+    this.rotation += this.rotSpeed;
+    if (this.y > canvas.height + 20) this.reset(false);
+  }
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.opacity;
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rotation);
+    ctx.fillStyle = this.color;
+    if (this.isRect) {
+      ctx.fillRect(-this.size / 2, -this.size / 4, this.size, this.size / 2);
+    } else {
+      ctx.beginPath();
+      ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+}
+
+let ambient = Array.from({ length: 60 }, () => new Piece(false));
+let burst   = [];
+
+function launchConfetti() {
+  burst.push(...Array.from({ length: 140 }, () => new Piece(true)));
+}
+
+(function loop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  [...ambient, ...burst].forEach(p => { p.update(); p.draw(); });
+  burst = burst.filter(p => p.y < canvas.height + 20);
+  requestAnimationFrame(loop);
+})();
+
+// ── Init ──────────────────────────────────────────────────────────
+pickQuestions();
+renderQuestion();
+</script>
+</body>
+</html>
