@@ -1028,7 +1028,8 @@ function showResult() {
   const result = document.getElementById('resultScreen');
   result.classList.add('show');
 
-  const bollywoodAge = 84 - (5 * score);
+  const wrong        = 10 - score;
+  const bollywoodAge = 34 + (5 * wrong);
   const excess       = bollywoodAge - 34;
 
   document.getElementById('bollywoodAge').textContent  = bollywoodAge;
